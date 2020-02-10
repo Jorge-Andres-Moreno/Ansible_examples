@@ -4,10 +4,11 @@
   become_user: root
   become_method: sudo
   gather_facts: no
-  tasks:
+  tasks: 
   - name: "updating server"
     apt:
       update_cache: yes
+ 
   - name: "Installing apt dependencies"
     apt:
      name: "{{item}}"
@@ -20,10 +21,6 @@
     pip:
       name: MySQL-python
       extra_args: --index=https://pypi.python.org/pypi/
-
-  - name: "Installing  mysql server"
-    apt:
-      name: mysql-server
 
   - name: "Installing  mysql server"
     apt:
