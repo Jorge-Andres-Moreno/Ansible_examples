@@ -1,0 +1,32 @@
+---
+# install modules mysql
+- hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+  gather_facts: no
+  tasks:
+  - name: Install o Postgresql
+    become: yes
+    apt:
+      name: ['libpq-dev', 'python3-dev', 'postgresql', 'postgresql-contrib']
+
+  - name: Make sure psycopg2 is installed
+    pip:
+      name: psycopg2
+      state: present
+
+  - name: ensure postgresql is running
+    service:
+      name: postgresql
+      state: started
+      enabled: yes
+
+  - name: Create a new database with name "acme" and specific encoding and locale # settings.
+    postgresql_db:
+      name: example
+      login_user: postgres
+      login_password: postgres
+      state: present
+
+  

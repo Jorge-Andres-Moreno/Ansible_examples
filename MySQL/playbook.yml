@@ -1,0 +1,39 @@
+---
+- hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+  gather_facts: no
+  tasks:
+  - name: "updating server"
+    apt:
+      update_cache: yes
+  - name: "Installing apt dependencies"
+    apt:
+     name: "{{item}}"
+    with_items:
+      - python-pip
+      - python-dev 
+      - libmysqlclient-dev
+
+  - name: "Installing pip dependencies"
+    pip:
+      name: MySQL-python
+      extra_args: --index=https://pypi.python.org/pypi/
+
+  - name: "Installing  mysql server"
+    apt:
+      name: mysql-server
+
+  - name: "Installing  mysql server"
+    apt:
+      name: mysql-server
+
+  - name: "Creating mysql user"
+    mysql_user:
+      name: root
+      password: root
+      priv: '*.*:ALL'
+      state: absent
+
+
