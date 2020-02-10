@@ -3,9 +3,9 @@ How to aprovising different services for example, web server(Node.Js, Apache,Ngi
 
 ### Install Ansible 
 
-### Ubuntu (debian)
+#### Ubuntu (debian)
 
-You can execute the file install.bash that have this commands or you can install manually.
+You can execute the file install.bash that have automatic this process, or you can try install manually .
 
 - sudo apt install software-properties-common -y
 - sudo apt-add-repository ppa:ansible/ansible -y
