@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  remote_user: ubuntu
+  become: yes
+  vars: 
+      mongoDB_Port : 27017
+  tasks:
+    - name: Enable root login
+      shell: sudo cp ~/.ssh/authorized_keys /root/.ssh/
+      
+    - name: Import the public key used by the package management system
+      apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10 state=present
+
+    - name: Add MongoDB repository
+      apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
+
+    - name: install mongodb
+      apt: pkg=mongodb-org state=latest update_cache=yes
+      notify:
+      - start mongodb
+
+    - name: Ensure mongodb is running and and enabled to start automatically on reboots
+      systemd:
+        name: mongodb
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: start mongodb
+      service: name=mongod state=started
