@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  become: yes
+  become_method: sudo
+  gather_facts: no
+  vars:
+    ansible_distribution_release: "bionic"
+  
+  tasks:
+    - name: Install nginx web server
+      apt: pkg=nginx state=latest
+
+    - name: Add apt key for nodesource
+      apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+    - name: Install nodejs
+      apt: name=nodejs
+
+    #- name: install NPM
+    #  shell: npm i
+    #    args:
+    #      chdir: /home/plataformas
+
+    - name: Install PM2
+      npm:
+        name: pm2
+        global: yes
+    
+    #- name: To Start a App
+    # command: pm2 start index.js --name Proj-US chdir= /home/ubuntu/proj-us
+    # ignore_errors: yes
+    # when: npm_finished.changed
