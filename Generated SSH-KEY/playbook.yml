@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: remove existing ssh_host keys
+    file: path={{ item }} state=absent
+    with_items:
+      - "/etc/ssh/ssh_host_rsa_key"
+      - "/etc/ssh/ssh_host_dsa_key"
+      - "/etc/ssh/ssh_host_ecdsa_key"
+
+  - name: Generate /etc/ssh/ RSA host key
+    command : ssh-keygen -q -t rsa -f /etc/ssh/ssh_host_rsa_key -C "" -N ""
+    args:
+      creates: /etc/ssh/ssh_host_rsa_key
+
+  - name: Generate /etc/ssh/ DSA host key
+    command : ssh-keygen -q -t dsa -f /etc/ssh/ssh_host_dsa_key -C "" -N ""
+    args:
+      creates: /etc/ssh/ssh_host_dsa_key
+
+  - name: Generate /etc/ssh/ ECDSA host key
+    command : ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -C "" -N ""
+    args:
+      creates: /etc/ssh/ssh_host_ecdsa_key
