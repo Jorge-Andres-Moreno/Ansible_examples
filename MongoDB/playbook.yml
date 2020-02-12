@@ -1,30 +1,34 @@
 ---
 - hosts: localhost
-  remote_user: ubuntu
+  remote_user: root
+  become_method: sudo
   become: yes
-  vars: 
-      mongoDB_Port : 27017
   tasks:
     - name: Enable root login
       shell: sudo cp ~/.ssh/authorized_keys /root/.ssh/
       
     - name: Import the public key used by the package management system
-      apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10 state=present
+      apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=EA312927 state=present
+  
+    - name: install gnupg
+      become: yes
+      apt:
+        name: gnupg
 
-    - name: Add MongoDB repository
-      apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present
+    - name: add apt key
+      become: yes
+      apt_key:
+        url: https://www.mongodb.org/static/pgp/server-4.2.asc
+
+    - name: add apt repository
+      become: yes
+      apt_repository:
+        repo: deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse
+        filename: mongodb-org-4.2.list
 
     - name: install mongodb
-      apt: pkg=mongodb-org state=latest update_cache=yes
-      notify:
-      - start mongodb
-
-    - name: Ensure mongodb is running and and enabled to start automatically on reboots
-      systemd:
-        name: mongodb
-        enabled: yes
-        state: started
-
-  handlers:
+      apt: pkg=mongodb-org state=latest
+  
     - name: start mongodb
-      service: name=mongod state=started
+      service: name=mongod state=started daemon-reload=true
+   
