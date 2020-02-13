@@ -16,21 +16,24 @@
       - python-pip
       - python-dev 
       - libmysqlclient-dev
+      - mysql-client
+      - mysql-server
 
   - name: "Installing pip dependencies"
     pip:
       name: MySQL-python
       extra_args: --index=https://pypi.python.org/pypi/
 
-  - name: "Installing  mysql server"
-    apt:
-      name: mysql-server
+  - name: Create a new database with name 'mysql'
+    mysql_db:
+      name: mydb
+      state: present
 
   - name: "Creating mysql user"
     mysql_user:
-      name: root
-      password: root
-      priv: '*.*:ALL'
-      state: absent
+      name: jorge
+      password : password
+      priv: 'mydb.*:ALL'
+      state: present
 
 
