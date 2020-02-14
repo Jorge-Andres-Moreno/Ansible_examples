@@ -23,7 +23,7 @@
           
     - name: Git Clone Repo
       git: 
-        repo: https://github.com/Jorge-Andres-Moreno/backend-Node.JS-MongoDB
+        repo: https://github.com/Jorge-Andres-Moreno/Web_server.git
         dest: '/home/ubuntu/app'
         update: yes
         force: yes
