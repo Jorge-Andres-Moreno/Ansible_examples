@@ -1,0 +1,55 @@
+---
+- hosts: localhost
+  gather_facts: yes
+  become: yes
+  vars:
+    NODEJS_VERSION: "8"
+  tasks:
+    - name: Install the gpg key for nodejs LTS
+      apt_key:
+        url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+        state: present
+
+    - name: Install the nodejs LTS repos
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_{{ NODEJS_VERSION }}.x {{ ansible_distribution_release }} main"
+        state: present
+        update_cache: yes
+
+    - name: Install the nodejs
+      apt:
+        name: nodejs
+        state: present
+          
+    - name: Git Clone Repo
+      git: 
+        repo: https://github.com/Jorge-Andres-Moreno/backend-Node.JS-MongoDB
+        dest: '/home/ubuntu/app'
+        update: yes
+        force: yes
+        accept_hostkey: no
+
+    - name: Install modules node
+      npm:
+         name: "{{item}}"
+         path: /home/ubuntu/app
+      with_items:
+        - express
+        - fs
+        - body-parser
+
+    - name: Install PM2
+      npm:
+        name: pm2
+        global: yes
+    
+    - name: To Start a App
+      become: yes
+      become_method: sudo
+      become_user: ubuntu
+      command: sudo pm2 start /home/ubuntu/app/index.js
+      
+      
+          
+      
+  
