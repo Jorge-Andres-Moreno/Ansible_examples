@@ -11,7 +11,7 @@
  
   - name: "Installing apt dependencies"
     apt:
-     name: "{{item}}"
+     name: "{{ item }}"
     with_items:
       - python-pip
       - python-dev 
@@ -43,6 +43,7 @@
       name: root
       password : password
       priv: '*.*:ALL'
+      host: '%'
       state: present
     notify: restart mysql
 
