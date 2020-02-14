@@ -27,6 +27,12 @@
     apt:
       name: mysql-server
 
+  - name: Configure mysql to listen to external interface
+    lineinfile:
+      dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+      regexp: '^bind-address'
+      line: bind-address = 0.0.0.0
+
   - name: Create a new database with name 'mysql'
     mysql_db:
       name: mydb
@@ -34,7 +40,14 @@
 
   - name: "Creating mysql user"
     mysql_user:
-      name: jorge
+      name: root
       password : password
-      priv: 'mydb.*:ALL'
+      priv: '*.*:ALL'
       state: present
+    notify: restart mysql
+
+  handlers:
+    - name: restart mysql
+      service:
+        name: mysql
+        state: restarted
