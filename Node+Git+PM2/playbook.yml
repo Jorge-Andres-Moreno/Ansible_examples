@@ -20,22 +20,26 @@
       apt:
         name: nodejs
         state: present
-          
+    
+    - name: Install git
+      apt:
+        name: git
+        state: present
+
     - name: Git Clone Repo
       git: 
         repo: https://github.com/Jorge-Andres-Moreno/Web_server.git
-        dest: '/home/ubuntu/app'
+        dest: '~/app'
         update: yes
         force: yes
         accept_hostkey: no
 
     - name: Install modules node
       npm:
-         name: "{{item}}"
-         path: /home/ubuntu/app
+        name: "{{item}}"
+        path: ~/app
       with_items:
         - express
-        - fs
         - body-parser
 
     - name: Install PM2
@@ -46,8 +50,8 @@
     - name: To Start a App
       become: yes
       become_method: sudo
-      become_user: ubuntu
-      command: sudo pm2 start /home/ubuntu/app/index.js
+      become_user: root
+      command: sudo pm2 start ~/app/index.js
       
       
           
