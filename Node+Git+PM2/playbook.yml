@@ -41,6 +41,7 @@
       with_items:
         - express
         - body-parser
+        - mysql
 
     - name: Install PM2
       npm:
